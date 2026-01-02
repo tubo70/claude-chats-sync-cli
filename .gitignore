@@ -45,8 +45,3 @@ Thumbs.db
 # Uncomment the line below to ignore session files, OR configure Git filter for safe sharing
 # .claudeCodeSessions/
 
-# Generated files when using the CLI tool
-.claudeCodeSessions/
-.gitattributes
-.gitconfig
-.gitfilters/
