@@ -55,7 +55,7 @@ function warn(message) {
  * Normalize project path to Claude Code format
  *
  * Windows:   D:\Projects\MyProject -> d--Projects-MyProject
- * Linux/Mac: /home/user/projects/my-project -> home-user-projects-my-project
+ * Linux/Mac: /home/user/projects/my-project -> -home-user-projects-my-project
  */
 function normalizeProjectPath(projectPath) {
   if (process.platform === 'win32') {
@@ -65,9 +65,10 @@ function normalizeProjectPath(projectPath) {
       .replace(/:/g, '-');
   } else {
     // Linux/Mac: Replace forward slashes with dashes, preserve case
+    // Note: Claude Code adds a leading dash for Unix paths
     return projectPath
-      .replace(/^\//, '')      // Remove leading slash
-      .replace(/\//g, '-');    // Replace remaining slashes with dashes
+      .replace(/^\//, '-')      // Replace leading slash with dash
+      .replace(/\//g, '-');     // Replace remaining slashes with dashes
   }
 }
 

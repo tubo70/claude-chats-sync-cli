@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.5] - 2025-01-02
+
+### Fixed
+- Fixed Linux/Mac path normalization to match Claude Code behavior
+- Unix paths now correctly include leading dash (e.g., `/home/user/projects` → `-home-user-projects`)
+
 ## [0.0.1] - 2025-01-02
 
 ### Added
@@ -30,5 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Git filter configuration for safe version control
 - Environment variable support for secure API key storage
 
-[Unreleased]: https://github.com/tubo70/claude-chats-sync/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/tubo70/claude-chats-sync/releases/tag/v1.0.0
+[Unreleased]: https://github.com/tubo70/claude-chats-sync-cli/compare/v0.0.5...HEAD
+[0.0.5]: https://github.com/tubo70/claude-chats-sync-cli/compare/v0.0.1...v0.0.5
+[0.0.1]: https://github.com/tubo70/claude-chats-sync-cli/releases/tag/v0.0.1
