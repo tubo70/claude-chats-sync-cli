@@ -292,14 +292,14 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## 📞 Support
 
-- 📧 [Issues](https://github.com/tubo70/claude-chats-sync/issues)
-- 📖 [Documentation](https://github.com/tubo70/claude-chats-sync/wiki)
-- 💬 [Discussions](https://github.com/tubo70/claude-chats-sync/discussions)
+- 📧 [Issues](https://github.com/tubo70/claude-chats-sync-cli/issues)
+- 📖 [Documentation](https://github.com/tubo70/claude-chats-sync-cli/wiki)
+- 💬 [Discussions](https://github.com/tubo70/claude-chats-sync-cli/discussions)
 
 ## 🔗 Links
 
 - [npm](https://www.npmjs.com/package/claude-chats-sync)
-- [GitHub](https://github.com/tubo70/claude-chats-sync)
+- [GitHub](https://github.com/tubo70/claude-chats-sync-cli)
 - [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=tubo.claude-code-chats-sync)
 
 ---

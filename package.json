@@ -1,6 +1,6 @@
 {
   "name": "claude-chats-sync",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Cross-platform CLI tool to sync Claude Code chat sessions to project directory",
   "main": "bin/claude-chats-sync.js",
   "bin": {
@@ -34,12 +34,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tubo70/claude-chats-sync.git"
+    "url": "https://github.com/tubo70/claude-chats-sync-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/tubo70/claude-chats-sync/issues"
+    "url": "https://github.com/tubo70/claude-chats-sync-cli/issues"
   },
-  "homepage": "https://github.com/tubo70/claude-chats-sync#readme",
+  "homepage": "https://github.com/tubo70/claude-chats-sync-cli#readme",
   "engines": {
     "node": ">=14.0.0"
   },

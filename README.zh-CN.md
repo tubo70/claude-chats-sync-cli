@@ -290,14 +290,14 @@ MIT - 详见 [LICENSE](LICENSE) 文件
 
 ## 📞 支持
 
-- 📧 [问题反馈](https://github.com/tubo70/claude-chats-sync/issues)
-- 📖 [文档](https://github.com/tubo70/claude-chats-sync/wiki)
-- 💬 [讨论](https://github.com/tubo70/claude-chats-sync/discussions)
+- 📧 [问题反馈](https://github.com/tubo70/claude-chats-sync-cli/issues)
+- 📖 [文档](https://github.com/tubo70/claude-chats-sync-cli/wiki)
+- 💬 [讨论](https://github.com/tubo70/claude-chats-sync-cli/discussions)
 
 ## 🔗 链接
 
 - [npm](https://www.npmjs.com/package/claude-chats-sync)
-- [GitHub](https://github.com/tubo70/claude-chats-sync)
+- [GitHub](https://github.com/tubo70/claude-chats-sync-cli)
 - [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=tubo.claude-code-chats-sync)
 
 ---
