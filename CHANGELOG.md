@@ -1,0 +1,34 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.0.1] - 2025-01-02
+
+### Added
+- Initial release
+- Cross-platform CLI tool for syncing Claude Code chat sessions
+- `init` command to initialize sync with symlink creation
+- `status` command to check sync status and session count
+- `open` command to open history folder in file manager
+- `clean` command to manually clean sensitive data from session files
+- `setup-git-filter` command to configure Git automatic cleaning
+- Git filter for automatic API key cleaning on commit
+- Support for custom folder names via `--folder-name` option
+- Force migration option via `--force` flag
+- Project path option via `--project-path`
+- Cross-platform support (Windows, macOS, Linux)
+- Colored terminal output for better readability
+- Bilingual error messages (English/Chinese)
+
+### Security
+- Automatic API key cleaning from session files
+- Git filter configuration for safe version control
+- Environment variable support for secure API key storage
+
+[Unreleased]: https://github.com/tubo70/claude-chats-sync/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/tubo70/claude-chats-sync/releases/tag/v1.0.0

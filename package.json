@@ -1,0 +1,57 @@
+{
+  "name": "claude-chats-sync",
+  "version": "0.0.1",
+  "description": "Cross-platform CLI tool to sync Claude Code chat sessions to project directory",
+  "main": "bin/claude-chats-sync.js",
+  "bin": {
+    "claude-chats-sync": "./bin/claude-chats-sync.js"
+  },
+  "scripts": {
+    "init": "node bin/claude-chats-sync.js init",
+    "status": "node bin/claude-chats-sync.js status",
+    "open": "node bin/claude-chats-sync.js open",
+    "clean": "node bin/claude-chats-sync.js clean",
+    "setup-git-filter": "node bin/claude-chats-sync.js setup-git-filter",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "claude-ai",
+    "sync",
+    "chat",
+    "sessions",
+    "cli",
+    "vscode",
+    "git",
+    "version-control",
+    "developer-tools"
+  ],
+  "author": {
+    "name": "tubo70",
+    "email": "445527@qq.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tubo70/claude-chats-sync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tubo70/claude-chats-sync/issues"
+  },
+  "homepage": "https://github.com/tubo70/claude-chats-sync#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "os": [
+    "win32",
+    "darwin",
+    "linux"
+  ],
+  "preferGlobal": true,
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ]
+}

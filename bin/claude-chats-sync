@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Claude Code Sync CLI - Bash wrapper
+# This script allows you to run the CLI with just "claude-sync" command
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+node "$SCRIPT_DIR/claude-sync.js" "$@"
