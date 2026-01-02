@@ -557,7 +557,7 @@ Environment Variables:
   ANTHROPIC_AUTH_TOKEN  Recommended: Configure API key via env var
   ANTHROPIC_BASE_URL    Optional: Third-party API endpoint
 
-For more information, visit: https://github.com/tubo70/claude-code-sync-extension
+For more information, visit: https://github.com/tubo70/claude-chats-sync-cli
 `;
 
   console.log(help);
