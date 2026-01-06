@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6] - 2025-01-06
+
+### Fixed
+- Fixed `init` command to properly handle projects with existing `.claudeCodeSessions` folder
+- Now correctly creates symlink to project's existing session folder when shared from other sources
+- Added intelligent merge functionality when both Claude storage and project folder contain sessions
+- Improved handling of multiple scenarios: empty folders, existing sessions, and session merging
+
 ## [0.0.5] - 2025-01-02
 
 ### Fixed

@@ -144,6 +144,38 @@ function moveDirectory(src, dest) {
 }
 
 /**
+ * 合并两个目录的文件
+ * Merge files from two directories
+ */
+function mergeDirectories(src, dest) {
+  // 确保目标目录存在
+  fs.mkdirSync(dest, { recursive: true });
+
+  // 读取源目录中的所有文件
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+
+  let mergedCount = 0;
+
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+
+    if (entry.isDirectory()) {
+      // 递归合并子目录
+      mergeDirectories(srcPath, destPath);
+    } else {
+      // 如果目标文件不存在，则复制；如果存在，跳过（保留目标文件）
+      if (!fs.existsSync(destPath)) {
+        fs.copyFileSync(srcPath, destPath);
+        mergedCount++;
+      }
+    }
+  }
+
+  return mergedCount;
+}
+
+/**
  * 清理会话文件内容中的敏感信息
  * Clean sensitive information from session file content
  */
@@ -193,24 +225,52 @@ function init(projectPath, options = {}) {
       } else if (fs.lstatSync(symlinkPath).isDirectory()) {
         // 现有真实目录 - 用户之前使用过 Claude Code
         // Existing real directory - user has used Claude Code before
-        const files = fs.readdirSync(symlinkPath);
-        const sessionFiles = files.filter(f => f.endsWith('.jsonl'));
+        const claudeStorageFiles = fs.readdirSync(symlinkPath);
+        const claudeStorageSessions = claudeStorageFiles.filter(f => f.endsWith('.jsonl'));
 
-        if (sessionFiles.length > 0 && !force) {
-          warn(`Found ${sessionFiles.length} existing Claude Code session(s) in Claude's storage.`);
-          info('Use --force to move them to your project folder');
-          return;
+        // 检查项目中是否已经有会话文件夹
+        const projectHistoryExists = fs.existsSync(historyFolder);
+        let projectSessions = [];
+        if (projectHistoryExists) {
+          projectSessions = fs.readdirSync(historyFolder).filter(f => f.endsWith('.jsonl'));
         }
 
-        if (sessionFiles.length > 0 && force) {
-          // 移动现有目录到项目文件夹
-          // Move existing directory to project folder
-          moveDirectory(symlinkPath, historyFolder);
-          success(`Moved ${sessionFiles.length} session(s) to project folder!`);
-        } else {
-          // 空目录，直接删除
-          // Empty directory, just remove it
+        // 场景1: Claude存储和项目中都没有会话文件
+        if (claudeStorageSessions.length === 0 && projectSessions.length === 0) {
+          // 都是空目录，直接删除Claude存储的目录
           fs.rmSync(symlinkPath, { recursive: true, force: true });
+        }
+        // 场景2: 只有Claude存储中有会话文件
+        else if (claudeStorageSessions.length > 0 && projectSessions.length === 0) {
+          if (!force) {
+            warn(`Found ${claudeStorageSessions.length} existing Claude Code session(s) in Claude's storage.`);
+            info('Use --force to move them to your project folder');
+            return;
+          }
+          // 移动Claude存储的目录到项目文件夹
+          moveDirectory(symlinkPath, historyFolder);
+          success(`Moved ${claudeStorageSessions.length} session(s) to project folder!`);
+        }
+        // 场景3: 只有项目中有会话文件
+        else if (claudeStorageSessions.length === 0 && projectSessions.length > 0) {
+          // 删除Claude存储中的空目录
+          fs.rmSync(symlinkPath, { recursive: true, force: true });
+          info(`Using existing ${projectSessions.length} session(s) from project folder`);
+        }
+        // 场景4: Claude存储和项目中都有会话文件 - 需要合并
+        else if (claudeStorageSessions.length > 0 && projectSessions.length > 0) {
+          if (!force) {
+            warn(`Found sessions in both locations:`);
+            info(`  - Claude's storage: ${claudeStorageSessions.length} session(s)`);
+            info(`  - Project folder: ${projectSessions.length} session(s)`);
+            info('Use --force to merge them into your project folder');
+            return;
+          }
+          // 合并目录: 将Claude存储的会话合并到项目中
+          const mergedCount = mergeDirectories(symlinkPath, historyFolder);
+          fs.rmSync(symlinkPath, { recursive: true, force: true });
+          success(`Merged ${mergedCount} session(s) from Claude's storage to project folder!`);
+          info(`Total sessions in project: ${projectSessions.length + mergedCount}`);
         }
       } else {
         error(`A file exists at Claude Code location: ${symlinkPath}`);
@@ -223,6 +283,12 @@ function init(projectPath, options = {}) {
     if (!fs.existsSync(historyFolder)) {
       fs.mkdirSync(historyFolder, { recursive: true });
       success(`Created folder: ${historyFolder}`);
+    } else {
+      // 显示项目中的会话数量
+      const existingSessions = fs.readdirSync(historyFolder).filter(f => f.endsWith('.jsonl'));
+      if (existingSessions.length > 0) {
+        info(`Using existing ${existingSessions.length} session(s) from project folder`);
+      }
     }
 
     // 确保 .claude/projects 目录存在
