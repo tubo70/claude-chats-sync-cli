@@ -105,13 +105,43 @@ function createSymlink(target, linkPath) {
 }
 
 /**
- * 检查是否为符号链接
- * Check if path is a symbolic link
+ * 检查是否为符号链接（并验证链接指向）
+ * Check if path is a symbolic link (and verify link target)
  */
-function isSymlink(symlinkPath) {
+function isSymlink(symlinkPath, expectedTarget) {
   try {
     const stats = fs.lstatSync(symlinkPath);
-    return stats.isSymbolicLink() || (process.platform === 'win32' && stats.isDirectory());
+
+    // Unix: 检查是否为符号链接
+    if (process.platform !== 'win32') {
+      return stats.isSymbolicLink();
+    }
+
+    // Windows: 需要区分 junction 和普通目录
+    // 检查是否为符号链接或 junction
+    if (stats.isSymbolicLink()) {
+      return true;
+    }
+
+    // 对于 Windows，如果是目录，还需要检查是否为 junction
+    // 并且验证其指向是否正确
+    if (stats.isDirectory()) {
+      try {
+        // 读取链接目标
+        const target = fs.readlinkSync(symlinkPath);
+        // 如果能读取到链接目标，说明是 junction 或符号链接
+        // 如果提供了期望目标，则验证是否匹配
+        if (expectedTarget) {
+          return path.resolve(target) === path.resolve(expectedTarget);
+        }
+        return true;
+      } catch {
+        // 如果读取链接失败，说明是普通目录，不是链接
+        return false;
+      }
+    }
+
+    return false;
   } catch {
     return false;
   }
@@ -217,7 +247,7 @@ function init(projectPath, options = {}) {
     // 检查符号链接是否已存在
     // Check if symlink already exists
     if (fs.existsSync(symlinkPath)) {
-      if (isSymlink(symlinkPath)) {
+      if (isSymlink(symlinkPath, historyFolder)) {
         success('Claude Code Chats Sync already initialized');
         info(`History folder: ${historyFolder}`);
         info(`Linked to: ${symlinkPath}`);

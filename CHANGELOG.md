@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.7] - 2025-01-06
+
+### Fixed
+- Fixed `isSymlink` function on Windows to correctly distinguish between physical directories and junctions/symlinks
+- Previously, all directories were incorrectly detected as symlinks on Windows
+- Now properly uses `fs.readlinkSync()` to detect if a directory is actually a junction or symlink
+- Fixes scenario where physical directories in Claude storage were incorrectly treated as already initialized
+
 ## [0.0.6] - 2025-01-06
 
 ### Fixed
