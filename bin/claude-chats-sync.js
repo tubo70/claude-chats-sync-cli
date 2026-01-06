@@ -547,12 +547,12 @@ Options:
   --project-path <path> Project path (default: current directory)
 
 Examples:
-  node claude-sync-cli.js init
-  node claude-sync-cli.js init --folder-name .sessions
-  node claude-sync-cli.js init --force
-  node claude-sync-cli.js status
-  node claude-sync-cli.js clean
-  node claude-sync-cli.js setup-git-filter
+  node claude-chats-sync.js init
+  node claude-chats-sync.js init --folder-name .sessions
+  node claude-chats-sync.js init --force
+  node claude-chats-sync.js status
+  node claude-chats-sync.js clean
+  node claude-chats-sync.js setup-git-filter
 
 Environment Variables:
   ANTHROPIC_AUTH_TOKEN  Recommended: Configure API key via env var
