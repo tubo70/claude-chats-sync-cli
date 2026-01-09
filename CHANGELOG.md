@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.8] - 2025-01-09
+
+### Added
+- Git smudge filter to restore absolute paths on checkout
+- Automatic path normalization for cross-platform compatibility
+
+### Changed
+- Enhanced clean filter to remove absolute paths from `cwd` field in session files
+- Updated `.gitattributes` pattern to match all `.jsonl` files in subdirectories (`**/*.jsonl`)
+- Absolute paths in `cwd` field are now replaced with project directory name only on commit
+- When checking out files, project names are automatically restored to absolute paths based on current system
+
+### Fixed
+- Git filter now correctly processes session files in nested subdirectories
+- Path cleaning now works for both Windows (`d:\Projects\...`) and Unix (`/home/user/...`) absolute paths
+
 ## [0.0.7] - 2025-01-06
 
 ### Fixed
