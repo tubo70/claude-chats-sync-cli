@@ -1,6 +1,6 @@
 {
   "name": "claude-chats-sync",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Cross-platform CLI tool to sync Claude Code chat sessions to project directory",
   "main": "bin/claude-chats-sync.js",
   "bin": {
@@ -12,6 +12,7 @@
     "open": "node bin/claude-chats-sync.js open",
     "clean": "node bin/claude-chats-sync.js clean",
     "setup-git-filter": "node bin/claude-chats-sync.js setup-git-filter",
+    "update": "node bin/claude-chats-sync.js update",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

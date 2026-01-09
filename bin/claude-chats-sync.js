@@ -693,6 +693,49 @@ function openFolder(projectPath, options = {}) {
 }
 
 /**
+ * 更新 Git 过滤器配置
+ * Update Git filter configuration
+ */
+function updateGitFilter(projectPath, options = {}) {
+  const { folderName = '.claudeCodeSessions' } = options;
+
+  try {
+    // 检查是否为 Git 仓库
+    // Check if we're in a Git repository
+    const gitDir = path.join(projectPath, '.git');
+    if (!fs.existsSync(gitDir)) {
+      error('Not a Git repository');
+      return false;
+    }
+
+    // 检查是否已经初始化
+    // Check if already initialized
+    const historyFolder = getHistoryFolderPath(projectPath, folderName);
+    if (!fs.existsSync(historyFolder)) {
+      error('Project not initialized. Please run "init" first.');
+      return false;
+    }
+
+    info('Updating Git filter configuration...');
+
+    // 重新设置 Git 过滤器
+    // Re-setup Git filter
+    setupGitFilter(projectPath, folderName, true);
+
+    success('Git filter updated successfully!');
+    info('New features:');
+    info('  - Smudge filter: Restores absolute paths on checkout');
+    info('  - Enhanced clean filter: Removes absolute paths from cwd field');
+    info('  - Updated pattern: Matches all .jsonl files in subdirectories');
+
+    return true;
+  } catch (err) {
+    error(`Failed to update: ${err.message}`);
+    return false;
+  }
+}
+
+/**
  * 显示帮助信息
  * Show help message
  */
@@ -709,6 +752,7 @@ Commands:
   open                  Open history folder in file manager
   clean                 Clean sensitive data from session files
   setup-git-filter      Setup Git filter for automatic cleaning
+  update                Update Git filter to latest version
   help                  Show this help message
 
 Options:
@@ -723,6 +767,9 @@ Examples:
   node claude-chats-sync.js status
   node claude-chats-sync.js clean
   node claude-chats-sync.js setup-git-filter
+  node claude-chats-sync.js update
+
+For more information, visit: https://github.com/tubo70/claude-chats-sync-cli
 
 Environment Variables:
   ANTHROPIC_AUTH_TOKEN  Recommended: Configure API key via env var
@@ -778,6 +825,9 @@ function main() {
       break;
     case 'setup-git-filter':
       setupGitFilter(projectPath, options.folderName, true);
+      break;
+    case 'update':
+      updateGitFilter(projectPath, options);
       break;
     default:
       error(`Unknown command: ${command}`);

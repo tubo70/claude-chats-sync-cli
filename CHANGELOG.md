@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.9] - 2025-01-09
+
+### Added
+- `update` command to upgrade Git filter configuration for existing projects
+- Automatic detection and upgrade of outdated filter configurations
+
+### Changed
+- Improved `init` command to inform users about `update` command for existing projects
+
 ## [0.0.8] - 2025-01-09
 
 ### Added
