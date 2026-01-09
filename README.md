@@ -8,6 +8,40 @@
 
 [中文文档](README.zh-CN.md) | English
 
+## ⚠️ Security Warning - Read Before Using
+
+> **IMPORTANT**: Do NOT commit `.claudeCodeSessions/` to your repository unless absolutely necessary!
+
+### What are the risks?
+
+Session files may contain sensitive information:
+- **API keys and authentication tokens** - Can be used to access your account
+- **Proprietary code and business logic** - Your confidential code and algorithms
+- **Private conversations** - Internal discussions and sensitive topics
+- **System paths and environment details** - Information about your infrastructure
+
+### Recommended Approach
+
+**Keep `.claudeCodeSessions/` in your `.gitignore`**
+
+This is the safest option. After running `claude-chats-sync init`, the tool automatically adds a commented entry to `.gitignore`. Uncomment it:
+
+```gitignore
+# Claude Code conversation history
+.claudeCodeSessions/
+```
+
+### If you MUST commit session files
+
+1. **Use environment variables for API keys** - This prevents them from appearing in session files
+2. **Use the Git filter** - Automatically cleans API keys on commit (but not 100% reliable)
+3. **Review files before committing** - Manually check for any sensitive data
+4. **Understand the risks** - No automated cleaning is 100% complete
+
+**You are responsible for ensuring no sensitive data is committed.**
+
+---
+
 ## ✨ Features
 
 - 🔄 **Auto-sync** - Creates symlinks from Claude Code local storage to your project folder
@@ -144,16 +178,6 @@ setx ANTHROPIC_BASE_URL "https://api.example.com"
 ```
 
 ## 🔒 Security & Version Control
-
-### ⚠️ Security Warning
-
-Session files may contain sensitive information:
-- API keys and authentication tokens
-- Proprietary code and business logic
-- Private conversations and internal discussions
-- System paths and environment details
-
-While this tool provides API key cleaning, **no automated cleaning is 100% complete**. Only commit these files if you fully understand and accept the security risks.
 
 ### Options for securing API keys
 
