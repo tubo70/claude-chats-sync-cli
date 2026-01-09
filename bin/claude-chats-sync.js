@@ -596,7 +596,7 @@ process.stdin.on('end', () => {
       gitAttributes = fs.readFileSync(gitAttributesPath, 'utf-8');
     }
 
-    const filterLine = `${folderName}/*.jsonl filter=claude-clean`;
+    const filterLine = `${folderName}/**/*.jsonl filter=claude-clean`;
 
     if (!gitAttributes.includes(filterLine)) {
       if (gitAttributes && !gitAttributes.endsWith('\n')) {
