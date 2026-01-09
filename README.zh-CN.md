@@ -75,6 +75,7 @@ claude-chats-sync open
 | `open` | 在文件管理器中打开历史文件夹 |
 | `clean` | 清理会话文件中的敏感数据 |
 | `setup-git-filter` | 设置 Git 自动清理过滤器 |
+| `update` | 更新 Git 过滤器到最新版本（用于现有项目） |
 | `help` | 显示帮助信息 |
 
 ## 🔧 使用示例
@@ -113,7 +114,12 @@ claude-chats-sync clean
 
 # 设置 Git 自动过滤器
 claude-chats-sync setup-git-filter
+
+# 更新 Git 过滤器（用于现有项目）
+claude-chats-sync update
 ```
+
+> **注意**：如果你使用旧版本（v0.0.8 之前）初始化项目，请运行 `claude-chats-sync update` 以获取最新的 Git 过滤器功能，包括路径清理和 smudge 过滤器。
 
 ## ⚙️ 环境变量配置（推荐）
 

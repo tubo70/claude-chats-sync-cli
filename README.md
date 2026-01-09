@@ -75,6 +75,7 @@ claude-chats-sync open
 | `open` | Open history folder in file manager |
 | `clean` | Clean sensitive data from session files |
 | `setup-git-filter` | Setup Git filter for automatic cleaning |
+| `update` | Update Git filter to latest version (for existing projects) |
 | `help` | Show help message |
 
 ## 🔧 Usage Examples
@@ -113,7 +114,12 @@ claude-chats-sync clean
 
 # Setup Git auto-filter
 claude-chats-sync setup-git-filter
+
+# Update Git filter (for existing projects)
+claude-chats-sync update
 ```
+
+> **Note**: If you initialized your project with an older version (before v0.0.8), run `claude-chats-sync update` to get the latest Git filter features including path cleaning and smudge filter.
 
 ## ⚙️ Environment Variables (Recommended)
 
