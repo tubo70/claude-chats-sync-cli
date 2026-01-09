@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const path = require('path');
 
 // Pattern for Anthropic API keys (normal format)
 const apiKeyPattern = /"primaryApiKey"\\s*:\\s*"sk-ant-[^"]*"/g;
@@ -25,5 +26,20 @@ process.stdin.on('end', () => {
     cleaned = cleaned.replace(apiKeyPatternEscaped, '\\\\"primaryApiKey\\\\": \\"[REDACTED]\\"');
     cleaned = cleaned.replace(authTokenPatternEscaped, '\\\\"ANTHROPIC_AUTH_TOKEN\\\\": \\"[REDACTED]\\"');
     cleaned = cleaned.replace(genericApiKeyPattern, '"$1": "[REDACTED]"');
+
+    // Replace absolute path in cwd with project name only
+    // Extract the last directory name from absolute paths
+    cleaned = cleaned.replace(
+        /"cwd"\s*:\s*"[^"]+?\\([^"\\]+)"/g,
+        (match, projectName) => {
+            return '"cwd": "' + projectName + '"';
+        }
+    );
+    // Also handle Unix-style paths
+    cleaned = cleaned.replace(
+        /"cwd"\s*:\s*"\/[^/]+\/([^"]+)"/g,
+        '"cwd": "$1"'
+    );
+
     process.stdout.write(cleaned);
 });

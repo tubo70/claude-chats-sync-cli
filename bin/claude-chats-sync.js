@@ -442,6 +442,7 @@ function setupGitFilter(projectPath, folderName = '.claudeCodeSessions', showMes
 
     const filterScript = `#!/usr/bin/env node
 const fs = require('fs');
+const path = require('path');
 
 // Pattern for Anthropic API keys (normal format)
 const apiKeyPattern = /"primaryApiKey"\\\\s*:\\\\s*"sk-ant-[^"]*"/g;
@@ -467,6 +468,21 @@ process.stdin.on('end', () => {
     cleaned = cleaned.replace(apiKeyPatternEscaped, '\\\\\\\\"primaryApiKey\\\\\\\\": \\\\"[REDACTED]\\\\"');
     cleaned = cleaned.replace(authTokenPatternEscaped, '\\\\\\\\"ANTHROPIC_AUTH_TOKEN\\\\\\\\": \\\\"[REDACTED]\\\\"');
     cleaned = cleaned.replace(genericApiKeyPattern, '"$1": "[REDACTED]"');
+
+    // Replace absolute path in cwd with project name only
+    // Extract the last directory name from absolute paths
+    cleaned = cleaned.replace(
+        /"cwd"\\s*:\\s*"[^"]+?\\\\([^"\\\\]+)"/g,
+        (match, projectName) => {
+            return '"cwd": "' + projectName + '"';
+        }
+    );
+    // Also handle Unix-style paths
+    cleaned = cleaned.replace(
+        /"cwd"\\s*:\\s*"\\/[^/]+\\/([^"]+)"/g,
+        '"cwd": "$1"'
+    );
+
     process.stdout.write(cleaned);
 });
 `;
@@ -478,6 +494,59 @@ process.stdin.on('end', () => {
     if (process.platform !== 'win32') {
       try {
         fs.chmodSync(filterScriptPath, 0o755);
+      } catch (e) {
+        // Ignore permission errors
+      }
+    }
+
+    // 创建 smudge 过滤器脚本
+    // Create smudge filter script
+    const smudgeScriptPath = path.join(projectPath, '.gitfilters', 'smudge-sessions.js');
+
+    const smudgeScript = `#!/usr/bin/env node
+const path = require('path');
+
+let data = '';
+process.stdin.setEncoding('utf8');
+
+process.stdin.on('data', (chunk) => {
+    data += chunk;
+});
+
+process.stdin.on('end', () => {
+    // Get current working directory (absolute path)
+    const currentPath = process.cwd();
+    const projectName = path.basename(currentPath);
+
+    // Replace project name in cwd with full absolute path
+    // Pattern matches "cwd":"project-name"
+    // Replaces with "cwd":"d:\\Projects\\tubo\\project-name" or "cwd":"/home/user/projects/project-name"
+    const smudged = data.replace(
+        /"cwd"\\s*:\\s*"([^"\\\/]+)"/g,
+        (match, projectNameInFile) => {
+            // Only replace if it looks like a project name (no path separators)
+            if (!projectNameInFile.includes('\\\\') && !projectNameInFile.includes('/')) {
+                // Convert to proper absolute path format for the current OS
+                const absolutePath = path.resolve(currentPath);
+                // Escape backslashes for JSON
+                const escapedPath = absolutePath.replace(/\\\\/g, '\\\\\\\\');
+                return '"cwd": "' + escapedPath + '"';
+            }
+            return match;
+        }
+    );
+
+    process.stdout.write(smudged);
+});
+`;
+
+    fs.writeFileSync(smudgeScriptPath, smudgeScript, 'utf-8');
+
+    // 在 Unix-like 系统上设置为可执行
+    // Make it executable on Unix-like systems
+    if (process.platform !== 'win32') {
+      try {
+        fs.chmodSync(smudgeScriptPath, 0o755);
       } catch (e) {
         // Ignore permission errors
       }
@@ -498,6 +567,7 @@ process.stdin.on('end', () => {
       }
       gitConfig += `[filter "claude-clean"]
 	clean = node .gitfilters/clean-sessions.js
+	smudge = node .gitfilters/smudge-sessions.js
 `;
       fs.writeFileSync(gitConfigPath, gitConfig, 'utf-8');
     }
@@ -507,6 +577,10 @@ process.stdin.on('end', () => {
     try {
       execSync(
         `git config filter.claude-clean.clean "node .gitfilters/clean-sessions.js"`,
+        { cwd: projectPath, stdio: 'pipe' }
+      );
+      execSync(
+        `git config filter.claude-clean.smudge "node .gitfilters/smudge-sessions.js"`,
         { cwd: projectPath, stdio: 'pipe' }
       );
     } catch (err) {
