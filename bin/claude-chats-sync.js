@@ -62,13 +62,15 @@ function normalizeProjectPath(projectPath) {
     // Windows: Replace backslashes and colons with dashes, preserve case
     return projectPath
       .replace(/\\/g, '-')
-      .replace(/:/g, '-');
+      .replace(/:/g, '-')
+      .replace(/\./g, '-');    // Replace dots with dashes
   } else {
     // Linux/Mac: Replace forward slashes with dashes, preserve case
     // Note: Claude Code adds a leading dash for Unix paths
     return projectPath
       .replace(/^\//, '-')      // Replace leading slash with dash
-      .replace(/\//g, '-');     // Replace remaining slashes with dashes
+      .replace(/\//g, '-')      // Replace remaining slashes with dashes
+      .replace(/\./g, '-');     // Replace dots with dashes
   }
 }
 
