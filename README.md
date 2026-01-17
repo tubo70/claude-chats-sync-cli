@@ -24,12 +24,16 @@ Session files may contain sensitive information:
 
 **Keep `.claudeCodeSessions/` in your `.gitignore`**
 
-This is the safest option. After running `claude-chats-sync init`, the tool automatically adds a commented entry to `.gitignore`. Uncomment it:
+This is the safest option. After running `claude-chats-sync init`, the tool automatically adds the following entries to `.gitignore`:
 
 ```gitignore
 # Claude Code conversation history
 .claudeCodeSessions/
+.claudeCodeSessions/**/sessions-index.json
+tmpclaude*
 ```
+
+These entries are active (not commented) by default to ensure session files and temporary files are ignored by Git.
 
 ### If you MUST commit session files
 
@@ -86,7 +90,8 @@ This will:
 - Create a `.claudeCodeSessions/` folder in your project
 - Create a symlink in `~/.claude/projects/`
 - Configure Git filter for automatic sensitive data cleaning
-- Add `.claudeCodeSessions/` to `.gitignore` (commented by default)
+- Add `.claudeCodeSessions/` and related patterns to `.gitignore`
+- Display security warnings and best practices
 
 ### Check status
 

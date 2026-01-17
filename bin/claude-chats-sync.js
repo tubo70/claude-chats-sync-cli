@@ -250,9 +250,12 @@ function init(projectPath, options = {}) {
     // Check if symlink already exists
     if (fs.existsSync(symlinkPath)) {
       if (isSymlink(symlinkPath, historyFolder)) {
-        success('Claude Code Chats Sync already initialized');
-        info(`History folder: ${historyFolder}`);
-        info(`Linked to: ${symlinkPath}`);
+        // 已经初始化过，转为执行 update
+        // Already initialized, switch to update
+        info('Claude Code Chats Sync already initialized');
+        info('Running update to ensure latest configuration...');
+        console.log('');
+        updateGitFilter(projectPath, options);
         return;
       } else if (fs.lstatSync(symlinkPath).isDirectory()) {
         // 现有真实目录 - 用户之前使用过 Claude Code
@@ -345,6 +348,27 @@ function init(projectPath, options = {}) {
     // Setup Git filter
     setupGitFilter(projectPath, folderName, false);
 
+    // 输出安全提示
+    // Show security warning
+    log('\n⚠️  Security Warning\n', 'yellow');
+    log('Session files may contain sensitive information:', 'yellow');
+    log('  • API keys and authentication tokens', 'yellow');
+    log('  • Proprietary code and business logic', 'yellow');
+    log('  • Private conversations', 'yellow');
+    log('  • System paths and environment details', 'yellow');
+    console.log('');
+    info('RECOMMENDED: Keep sessions in .gitignore (already added)');
+    info('Session files will be ignored by Git');
+    console.log('');
+    log('If you MUST commit session files:', 'yellow');
+    log('  1. Use environment variables for API keys:', 'yellow');
+    log('     export ANTHROPIC_AUTH_TOKEN="sk-ant-..."', 'yellow');
+    log('  2. Git filter is configured (not 100% reliable)', 'yellow');
+    log('  3. Review files before committing', 'yellow');
+    console.log('');
+    info('You are responsible for ensuring no sensitive data is committed.');
+    console.log('');
+
   } catch (err) {
     error(`Failed to initialize: ${err.message}`);
   }
@@ -401,18 +425,58 @@ function addToGitIgnore(projectPath, folderName = '.claudeCodeSessions') {
     }
 
     const ignoreEntry = `# Claude Code conversation history
-# Uncomment the line below to ignore session files, OR configure Git filter for safe sharing
-# ${folderName}/`;
+${folderName}/
+${folderName}/**/sessions-index.json
+tmpclaude*`;
 
-    // 仅在不存在时添加
-    // Only add if not already present
-    if (!content.includes(`# ${folderName}/`) && !content.includes(`${folderName}/`)) {
+    // 检查是否已经包含任何相关条目
+    // Check if any related entries already exist
+    const hasFolderEntry = content.includes(`# ${folderName}/`) || content.includes(`${folderName}/`);
+    const hasIndexEntry = content.includes('sessions-index.json');
+    const hasTmpEntry = content.includes('tmpclaude*');
+
+    // 如果都不存在，则添加完整的条目
+    // If none exist, add complete entry
+    if (!hasFolderEntry && !hasIndexEntry && !hasTmpEntry) {
       if (content && !content.endsWith('\n')) {
         content += '\n';
       }
       content += `\n${ignoreEntry}\n`;
       fs.writeFileSync(gitignorePath, content, 'utf-8');
-      success('Added .gitignore entry (commented by default)');
+      success('Added .gitignore entry for Claude Code sessions');
+    } else {
+      // 如果部分存在，则添加缺失的部分
+      // If some exist, add missing parts
+      let updated = false;
+
+      if (!hasFolderEntry) {
+        if (content && !content.endsWith('\n')) {
+          content += '\n';
+        }
+        content += `${folderName}/\n`;
+        updated = true;
+      }
+
+      if (!hasIndexEntry) {
+        if (content && !content.endsWith('\n')) {
+          content += '\n';
+        }
+        content += `${folderName}/**/sessions-index.json\n`;
+        updated = true;
+      }
+
+      if (!hasTmpEntry) {
+        if (content && !content.endsWith('\n')) {
+          content += '\n';
+        }
+        content += `tmpclaude*\n`;
+        updated = true;
+      }
+
+      if (updated) {
+        fs.writeFileSync(gitignorePath, content, 'utf-8');
+        success('Updated .gitignore entry for Claude Code sessions');
+      }
     }
   } catch (err) {
     warn('Could not update .gitignore (not a Git repository?)');
@@ -724,11 +788,33 @@ function updateGitFilter(projectPath, options = {}) {
     // Re-setup Git filter
     setupGitFilter(projectPath, folderName, true);
 
+    // 更新 .gitignore
+    // Update .gitignore
+    addToGitIgnore(projectPath, folderName);
+
     success('Git filter updated successfully!');
     info('New features:');
     info('  - Smudge filter: Restores absolute paths on checkout');
     info('  - Enhanced clean filter: Removes absolute paths from cwd field');
     info('  - Updated pattern: Matches all .jsonl files in subdirectories');
+    info('  - Updated .gitignore with sessions-index.json and tmpclaude* patterns');
+
+    // 输出安全提示
+    // Show security warning
+    console.log('');
+    log('⚠️  Security Reminder', 'yellow');
+    console.log('');
+    info('RECOMMENDED: Keep sessions in .gitignore (already configured)');
+    info('Session files will be ignored by Git');
+    console.log('');
+    log('If you MUST commit session files:', 'yellow');
+    log('  1. Use environment variables for API keys:', 'yellow');
+    log('     export ANTHROPIC_AUTH_TOKEN="sk-ant-..."', 'yellow');
+    log('  2. Git filter is configured (not 100% reliable)', 'yellow');
+    log('  3. Review files before committing', 'yellow');
+    console.log('');
+    info('You are responsible for ensuring no sensitive data is committed.');
+    console.log('');
 
     return true;
   } catch (err) {

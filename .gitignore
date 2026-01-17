@@ -45,3 +45,5 @@ Thumbs.db
 # Uncomment the line below to ignore session files, OR configure Git filter for safe sharing
 # .claudeCodeSessions/
 
+.claudeCodeSessions/**/sessions-index.json
+tmpclaude*

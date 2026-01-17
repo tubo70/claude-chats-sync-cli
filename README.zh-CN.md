@@ -24,12 +24,16 @@
 
 **将 `.claudeCodeSessions/` 保留在 `.gitignore` 中**
 
-这是最安全的选项。运行 `claude-chats-sync init` 后,工具会自动在 `.gitignore` 中添加一个被注释的条目。取消注释:
+这是最安全的选项。运行 `claude-chats-sync init` 后,工具会自动在 `.gitignore` 中添加以下条目：
 
 ```gitignore
 # Claude Code 对话历史
 .claudeCodeSessions/
+.claudeCodeSessions/**/sessions-index.json
+tmpclaude*
 ```
+
+这些条目默认是激活的（未被注释），以确保会话文件和临时文件被 Git 忽略。
 
 ### 如果必须提交会话文件
 
@@ -86,7 +90,8 @@ claude-chats-sync init
 - 在项目中创建 `.claudeCodeSessions/` 文件夹
 - 在 `~/.claude/projects/` 中创建符号链接
 - 配置 Git 过滤器以自动清理敏感数据
-- 将 `.claudeCodeSessions/` 添加到 `.gitignore`（默认被注释）
+- 将 `.claudeCodeSessions/` 和相关模式添加到 `.gitignore`
+- 显示安全警告和最佳实践
 
 ### 查看状态
 
@@ -203,10 +208,13 @@ git commit -m "添加对话历史"
 
 ### 完全 Git 忽略（最安全）
 
-**推荐**：完全忽略会话文件。在 `.gitignore` 中取消注释：
+**推荐**：完全忽略会话文件。运行 `claude-chats-sync init` 后，`.gitignore` 已自动配置为忽略会话文件：
 
 ```gitignore
+# Claude Code 对话历史
 .claudeCodeSessions/
+.claudeCodeSessions/**/sessions-index.json
+tmpclaude*
 ```
 
 这可以防止意外将敏感数据提交到仓库。

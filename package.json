@@ -1,6 +1,6 @@
 {
   "name": "claude-chats-sync",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Cross-platform CLI tool to sync Claude Code chat sessions to project directory",
   "main": "bin/claude-chats-sync.js",
   "bin": {
