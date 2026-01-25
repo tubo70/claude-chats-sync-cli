@@ -427,17 +427,19 @@ function addToGitIgnore(projectPath, folderName = '.claudeCodeSessions') {
     const ignoreEntry = `# Claude Code conversation history
 ${folderName}/
 ${folderName}/**/sessions-index.json
+${folderName}/**/tool-results
 tmpclaude*`;
 
     // 检查是否已经包含任何相关条目
     // Check if any related entries already exist
     const hasFolderEntry = content.includes(`# ${folderName}/`) || content.includes(`${folderName}/`);
     const hasIndexEntry = content.includes('sessions-index.json');
+    const hasToolResultsEntry = content.includes(`${folderName}/**/tool-results`);
     const hasTmpEntry = content.includes('tmpclaude*');
 
     // 如果都不存在，则添加完整的条目
     // If none exist, add complete entry
-    if (!hasFolderEntry && !hasIndexEntry && !hasTmpEntry) {
+    if (!hasFolderEntry && !hasIndexEntry && !hasToolResultsEntry && !hasTmpEntry) {
       if (content && !content.endsWith('\n')) {
         content += '\n';
       }
@@ -462,6 +464,14 @@ tmpclaude*`;
           content += '\n';
         }
         content += `${folderName}/**/sessions-index.json\n`;
+        updated = true;
+      }
+
+      if (!hasToolResultsEntry) {
+        if (content && !content.endsWith('\n')) {
+          content += '\n';
+        }
+        content += `${folderName}/**/tool-results\n`;
         updated = true;
       }
 

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-01-25
+
+### Added
+- Enhanced .gitignore configuration with `tool-results` pattern to exclude tool execution results directories
+
+### Changed
+- Added `.claudeCodeSessions/**/tool-results` to .gitignore to prevent committing tool execution results
+
 ## [0.2.0] - 2025-01-17
 
 ### Added
@@ -109,7 +117,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Git filter configuration for safe version control
 - Environment variable support for secure API key storage
 
-[Unreleased]: https://github.com/tubo70/claude-chats-sync-cli/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/tubo70/claude-chats-sync-cli/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/tubo70/claude-chats-sync-cli/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/tubo70/claude-chats-sync-cli/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/tubo70/claude-chats-sync-cli/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/tubo70/claude-chats-sync-cli/compare/v0.0.9...v0.1.0
